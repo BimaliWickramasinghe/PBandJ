@@ -1,9 +1,13 @@
 var myGamePiece;
 var myObstacles = [];
+var myCollectables = [];
+var myScore;
+var newScore = 0;
 var y=0;
 
 function startGame() {
     myGamePiece = new component(50, 50, "red", 10, 25);
+    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
 }
 
@@ -41,7 +45,8 @@ var myGameArea = {
     }
 }
 
-function component(width, height, color, x, y) {
+function component(width, height, color, x, y, type) {
+    this.type = type;
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -50,8 +55,14 @@ function component(width, height, color, x, y) {
     this.y = y;    
     this.update = function() {
         ctx = myGameArea.context;
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+          } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+          }
     }
     this.newPos = function() {
         this.x += this.speedX;
@@ -72,10 +83,27 @@ function component(width, height, color, x, y) {
         }
         return crash;
     }
+    this.crashWithMe = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = false;
+        if (myright == otherleft && (mytop < othertop) && (mybottom > otherbottom) ) {
+            crash = true;
+        }
+        return crash;
+    }
 }
 
 function updateGameArea() {
     var x, y, z;
+    var currentScore = 0;
+    myScore.text = "SCORE: " + newScore;
     var obsPlace = (0, 5, 10, 15, 20);
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
@@ -83,18 +111,39 @@ function updateGameArea() {
             return;
         } 
     }
+    for (i = 0; i < myCollectables.length; i += 1) {
+        if (myGamePiece.crashWithMe(myCollectables[i])) {
+            newScore += 1;
+            myScore.text = "SCORE: " + newScore;
+        } 
+        if (i==10){
+            myGameArea.stop();
+        }
+    }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(100)) {
+    if (myGameArea.frameNo == 1 || everyinterval(1000)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
         myObstacles.push(new component(10, 20, "green", x, y));
     }
+    if (myGameArea.frameNo == 1 || everyinterval(100)) {
+        x = myGameArea.canvas.width;
+        z = getRndInteger(0,4)
+        y = myGameArea.canvas.height - z;
+        myCollectables.push(new component(10, 20, "blue", x, y));
+    }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
+    for (i = 0; i < myCollectables.length; i += 1) {
+        myCollectables[i].x += -1;
+        myCollectables[i].update();
+    }
+    
+  myScore.update();
     myGamePiece.newPos();    
     myGamePiece.update();
 }
@@ -120,3 +169,4 @@ function movedown() {
 function getRndInteger(min, max) {
     return ((Math.floor(Math.random() * (max - min + 1) ) + min)+0.5)*100;
 }
+
