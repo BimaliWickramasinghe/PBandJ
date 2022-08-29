@@ -75,8 +75,8 @@ function component(width, height, color, x, y) {
 }
 
 function updateGameArea() {
-    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
-    
+    var x, y, z;
+    var obsPlace = (0, 5, 10, 15, 20);
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
             myGameArea.stop();
@@ -84,20 +84,12 @@ function updateGameArea() {
         } 
     }
     myGameArea.clear();
-
-    
-
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    if (myGameArea.frameNo == 1 || everyinterval(100)) {
         x = myGameArea.canvas.width;
-        minHeight = 20;
-        maxHeight = 200;
-        height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-        minGap = 100;
-        maxGap = 200;
-        gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new component(50, height, "green", x, 0));
-        myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
+        z = getRndInteger(0,4)
+        y = myGameArea.canvas.height - z;
+        myObstacles.push(new component(10, 20, "green", x, y));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
@@ -123,4 +115,8 @@ function movedown() {
     if (y==1 && myGamePiece.y<400) {
         myGamePiece.y += 100;
         y=0; }
+}
+
+function getRndInteger(min, max) {
+    return ((Math.floor(Math.random() * (max - min + 1) ) + min)+0.5)*100;
 }
