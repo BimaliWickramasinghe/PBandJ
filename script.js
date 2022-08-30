@@ -165,7 +165,7 @@ function updateGameArea() {
         myBackground.speedX = -1;
         myBackground.newPos();
   myBackground.update();
-    if (myGameArea.frameNo == 5 || everyinterval(250)) {
+    if (myGameArea.frameNo == 5 || everyinterval(300)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
