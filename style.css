@@ -1,5 +1,5 @@
 body{
-    background-image: url("mainBackground.jpg");
+    background-image: url("resources/mainBackground.jpg");
 }
 
 canvas{
@@ -18,7 +18,7 @@ canvas{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("home.png");
+    background-image: url("resources/home.png");
     background-size: 800px 600px;
 }
 
@@ -29,7 +29,7 @@ canvas{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("gameOver.png");
+    background-image: url("resources/gameOver.png");
     background-size: 800px 600px;
     display: none;
 }
@@ -41,7 +41,7 @@ canvas{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-image: url("youWon.png");
+    background-image: url("resources/youWon.png");
     background-size: 800px 600px;
     display: none;
 }
@@ -55,6 +55,6 @@ canvas{
     height: 90px;
     border: 0px;
     border-radius: 25px;
-    background-image: url("button.png");
+    background-image: url("resources/button.png");
     background-size: 260px 90px;
 }

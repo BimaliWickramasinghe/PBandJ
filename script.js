@@ -6,24 +6,21 @@ var myBackground;
 var myWinSound;
 var myHitSound;
 var myMusic;
-
 var newScore = 0;
 var y=0;
 
 localStorage.setItem("highestScore", "0");
 
-function startGame() {
-    
-    myGamePiece = new component(75, 75, "left.png", 50, 125, "image");
-    myBackground = new component(800, 600, "background.png", 0, 0, "background");
+function startGame() { 
+    myGamePiece = new component(75, 75, "resources/left.png", 50, 125, "image");
+    myBackground = new component(800, 600, "resources/background.png", 0, 0, "background");
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
-    myWinSound = new sound("win.wav");
-    myHitSound = new sound("hit.wav");
-    myMusic = new sound("bgMusic.mp3");
+    myWinSound = new sound("resources/win.wav");
+    myHitSound = new sound("resources/hit.wav");
+    myMusic = new sound("resources/bgMusic.mp3");
     myMusic.loop = true;
-  myMusic.play();
+    myMusic.play();
     hideElement();
-    
     myGameArea.start();
 }
 
@@ -32,15 +29,11 @@ var myGameArea = {
     start : function() {
         this.canvas.width = 800;
         this.canvas.height = 600;
-        
         this.canvas.setAttribute("id","myCanvas");
         this.context = this.canvas.getContext("2d");
-        
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
-
-        
 
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
@@ -55,7 +48,6 @@ var myGameArea = {
           window.addEventListener('keyup', function (e) {
             myGameArea.key = false;
           })
-
         },
         
     clear : function() {
@@ -71,7 +63,7 @@ function component(width, height, color, x, y, type) {
     if (type == "image" || type == "background") {
         this.image = new Image();
         this.image.src = color;
-      }
+    }
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -168,38 +160,35 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-        changePlayer();
-        myBackground.speedX = -1;
-        myBackground.newPos();
-  myBackground.update();
+    changePlayer();
+    myBackground.speedX = -1;
+    myBackground.newPos();
+    myBackground.update();
     if (myGameArea.frameNo == 5 || everyinterval(300)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
-        myObstacles.push(new component(50, 70, "pleft.png", x, y, "image"));
+        myObstacles.push(new component(50, 70, "resources/pleft.png", x, y, "image"));
     }
     if (myGameArea.frameNo == 1 || everyinterval(200)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
-        myCollectables.push(new component(60, 60, "jleft.png", x, y, "image"));
+        myCollectables.push(new component(60, 60, "resources/jleft.png", x, y, "image"));
         
     }
     for (i = 0; i < myObstacles.length; i += 1) {
-        myObstacles[i].x += -1;
+        myObstacles[i].x += -5;
         myObstacles[i].update();
         changePepper(myObstacles[i]);
     }
     for (i = 0; i < myCollectables.length; i += 1) {
-        myCollectables[i].x += -1;
+        myCollectables[i].x += -3;
         myCollectables[i].update();
         changeJam(myCollectables[i]);
     }
-    
-    
-    
-    
-  myScore.update();
+       
+    myScore.update();
     myGamePiece.newPos();    
     myGamePiece.update();
     myCollectables.newPos();
@@ -215,7 +204,6 @@ function moveup() {
     if (y==1 && myGamePiece.y>125) {
         myGamePiece.y -= 100;
         y=0; }
-
 }
 
 function movedown() {
@@ -235,15 +223,13 @@ function hideElement() {
     } else {
       x.style.display = "none";
     }
-  }
+}
 
 
-  function endLevelOne() {
+function endLevelOne() {
     var x = document.getElementById("levelOneComplete");
-
     let canvas = document.getElementById("myCanvas");
     let hidden = canvas.getAttribute("hidden");
-
     if (hidden) {
        canvas.removeAttribute("hidden");
     } else {
@@ -253,51 +239,48 @@ function hideElement() {
       } else {
         x.style.display = "block";
       }
-    }
-  }
-
-  function youLoseScreen() {
-    var x = document.getElementById("retryLevel");
-
-    let canvas = document.getElementById("myCanvas");
-    let hidden = canvas.getAttribute("hidden");
-
-    if (hidden) {
-       canvas.removeAttribute("hidden");
-    } else {
-       canvas.setAttribute("hidden", "hidden");
-       if (x.style.display === "block") {
-        x.style.display = "none";
-      } else {
-        x.style.display = "block";
-      }
-    }
-  }
-
-  function changePlayer(){
-    if(everyinterval(10)){
-        myGamePiece.image.src = "right.png";
-    }if(everyinterval(15)){
-        myGamePiece.image.src = "left.png";
     }
 }
 
-    function changeJam(x){
-        if(everyinterval(10)){
-            x.image.src = "jright.png";
-        }if(everyinterval(15)){
-            x.image.src = "jleft.png";
-        }
-   
-  }
+function youLoseScreen() {
+    var x = document.getElementById("retryLevel");
+    let canvas = document.getElementById("myCanvas");
+    let hidden = canvas.getAttribute("hidden");
+    if (hidden) {
+       canvas.removeAttribute("hidden");
+    } else {
+       canvas.setAttribute("hidden", "hidden");
+       if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+      }
+    }
+}
 
-  function changePepper(x){
+function changePlayer(){
     if(everyinterval(10)){
-        x.image.src = "pleft.png";
+        myGamePiece.image.src = "resources/right.png";
     }if(everyinterval(15)){
-        x.image.src = "pright.png";
+        myGamePiece.image.src = "resources/left.png";
+    }
+}
+
+function changeJam(x){
+    if(everyinterval(10)){
+        x.image.src = "resources/jright.png";
+    }if(everyinterval(15)){
+        x.image.src = "resources/jleft.png";
     }
 
+}
+
+function changePepper(x){
+    if(everyinterval(10)){
+        x.image.src = "resources/pleft.png";
+    }if(everyinterval(15)){
+        x.image.src = "resources/pright.png";
+    }
 }
 
 function sound(src) {
@@ -313,8 +296,8 @@ function sound(src) {
     this.stop = function(){
       this.sound.pause();
     }
-  }
+}
 
 function hideCollectable(x){
     x.removeAttribute.Image();
-  }
+}
