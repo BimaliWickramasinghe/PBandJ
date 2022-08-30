@@ -8,6 +8,7 @@ var y=0;
 function startGame() {
     myGamePiece = new component(50, 50, "red", 10, 25);
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    hideElement();
     myGameArea.start();
 }
 
@@ -16,6 +17,7 @@ var myGameArea = {
     start : function() {
         this.canvas.width = 800;
         this.canvas.height = 500;
+        this.canvas.setAttribute("id","myCanvas");
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -102,9 +104,7 @@ function component(width, height, color, x, y, type) {
 
 function updateGameArea() {
     var x, y, z;
-    var currentScore = 0;
     myScore.text = "SCORE: " + newScore;
-    var obsPlace = (0, 5, 10, 15, 20);
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
             myGameArea.stop();
@@ -116,19 +116,21 @@ function updateGameArea() {
             newScore += 1;
             myScore.text = "SCORE: " + newScore;
         } 
-        if (i==10){
+        if (i==1){
+            
             myGameArea.stop();
+            showLevelTwo();
         }
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(1000)) {
+    if (myGameArea.frameNo == 1 || everyinterval(253)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
         myObstacles.push(new component(10, 20, "green", x, y));
     }
-    if (myGameArea.frameNo == 1 || everyinterval(100)) {
+    if (myGameArea.frameNo == 1 || everyinterval(200)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
@@ -170,3 +172,29 @@ function getRndInteger(min, max) {
     return ((Math.floor(Math.random() * (max - min + 1) ) + min)+0.5)*100;
 }
 
+function hideElement() {
+    var x = document.getElementById("homePage");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function showLevelTwo() {
+    var x = document.getElementById("levelOneComplete");
+
+    let canvas = document.getElementById("myCanvas");
+    let hidden = canvas.getAttribute("hidden");
+
+    if (hidden) {
+       canvas.removeAttribute("hidden");
+    } else {
+       canvas.setAttribute("hidden", "hidden");
+       if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+      }
+    }
+  }
