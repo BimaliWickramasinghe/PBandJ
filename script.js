@@ -4,6 +4,7 @@ var myCollectables = [];
 var myScore;
 var newScore = 0;
 var y=0;
+localStorage.setItem("highestScore", "newScore");
 
 function startGame() {
     myGamePiece = new component(50, 50, "red", 10, 25);
@@ -108,6 +109,7 @@ function updateGameArea() {
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
             myGameArea.stop();
+            
             return;
         } 
     }
@@ -116,8 +118,16 @@ function updateGameArea() {
             newScore += 1;
             myScore.text = "SCORE: " + newScore;
         } 
-        if (i==1){
-            
+        if (i==2){
+            const highScore = localStorage.getItem("highestScore");
+            if (newScore > highScore){
+                localStorage.removeItem("highestScore");
+                localStorage.setItem("higestScore", newScore);
+                localStorage.getItem("highestScore");
+                alert("Highest Score is " + newScore);
+            }else{
+                alert("Highest Score is " + highScore);
+            }
             myGameArea.stop();
             showLevelTwo();
         }
@@ -181,6 +191,15 @@ function hideElement() {
     }
   }
 
+  function hideElementTwo() {
+    var x = document.getElementById("levelOneComplete");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
   function showLevelTwo() {
     var x = document.getElementById("levelOneComplete");
 
@@ -196,5 +215,16 @@ function hideElement() {
       } else {
         x.style.display = "block";
       }
+    }
+  }
+
+  function showCanvas(){
+    let canvas = document.getElementById("myCanvas");
+    let hidden = canvas.getAttribute("hidden");
+
+    if (hidden) {
+       canvas.removeAttribute("hidden");
+    } else {
+        canvas.removeAttribute("hidden");
     }
   }
