@@ -2,14 +2,22 @@ var myGamePiece;
 var myObstacles = [];
 var myCollectables = [];
 var myScore;
+var myBackground;
+
 var newScore = 0;
 var y=0;
-localStorage.setItem("highestScore", "newScore");
+
+localStorage.setItem("highestScore", "0");
 
 function startGame() {
-    myGamePiece = new component(50, 50, "red", 10, 25);
+    
+    myGamePiece = new component(50, 50, "run.gif", 10, 25, "image");
+    myBackground = new component(656, 270, "citymarket.png", 0, 0, "image");
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    
+    
     hideElement();
+    
     myGameArea.start();
 }
 
@@ -18,11 +26,15 @@ var myGameArea = {
     start : function() {
         this.canvas.width = 800;
         this.canvas.height = 500;
+        
         this.canvas.setAttribute("id","myCanvas");
         this.context = this.canvas.getContext("2d");
+        
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
+
+        
 
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
@@ -50,6 +62,10 @@ var myGameArea = {
 
 function component(width, height, color, x, y, type) {
     this.type = type;
+    if (type == "image") {
+        this.image = new Image();
+        this.image.src = color;
+      }
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -62,14 +78,19 @@ function component(width, height, color, x, y, type) {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
-          } else {
+          } else if(type == "image"){
+            ctx.drawImage(this.image,
+                this.x,
+                this.y,
+                this.width, this.height);
+          }else {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
           }
     }
     this.newPos = function() {
         this.x += this.speedX;
-        this.y += this.speedY;        
+        this.y += this.speedY;       
     }    
     this.crashWith = function(otherobj) {
         var myleft = this.x;
@@ -118,7 +139,7 @@ function updateGameArea() {
             newScore += 1;
             myScore.text = "SCORE: " + newScore;
         } 
-        if (i==2){
+        if (i==20){
             const highScore = localStorage.getItem("highestScore");
             if (newScore > highScore){
                 localStorage.removeItem("highestScore");
@@ -129,22 +150,25 @@ function updateGameArea() {
                 alert("Highest Score is " + highScore);
             }
             myGameArea.stop();
-            showLevelTwo();
+            endLevelOne();
         }
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
+        changePlayer();
+        myBackground.newPos();
+  myBackground.update();
     if (myGameArea.frameNo == 1 || everyinterval(253)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
-        myObstacles.push(new component(10, 20, "green", x, y));
+        myObstacles.push(new component(10, 20, "right.gif", x, y, "image"));
     }
     if (myGameArea.frameNo == 1 || everyinterval(200)) {
         x = myGameArea.canvas.width;
         z = getRndInteger(0,4)
         y = myGameArea.canvas.height - z;
-        myCollectables.push(new component(10, 20, "blue", x, y));
+        myCollectables.push(new component(10, 20, "left.gif", x, y, "image"));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
@@ -155,9 +179,14 @@ function updateGameArea() {
         myCollectables[i].update();
     }
     
+    
+    
+    
   myScore.update();
     myGamePiece.newPos();    
     myGamePiece.update();
+    myCollectables.newPos();
+    myCollectables.update();   
 }
 
 function everyinterval(n) {
@@ -191,16 +220,8 @@ function hideElement() {
     }
   }
 
-  function hideElementTwo() {
-    var x = document.getElementById("levelOneComplete");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  }
 
-  function showLevelTwo() {
+  function endLevelOne() {
     var x = document.getElementById("levelOneComplete");
 
     let canvas = document.getElementById("myCanvas");
@@ -218,13 +239,11 @@ function hideElement() {
     }
   }
 
-  function showCanvas(){
-    let canvas = document.getElementById("myCanvas");
-    let hidden = canvas.getAttribute("hidden");
-
-    if (hidden) {
-       canvas.removeAttribute("hidden");
-    } else {
-        canvas.removeAttribute("hidden");
+  function changePlayer(){
+    if(everyinterval(10)){
+        myGamePiece.image.src = "right.gif";
+    }if(everyinterval(15)){
+        myGamePiece.image.src = "left.gif";
     }
+   
   }
