@@ -3,6 +3,9 @@ var myObstacles = [];
 var myCollectables = [];
 var myScore;
 var myBackground;
+var myWinSound;
+var myHitSound;
+var myMusic;
 
 var newScore = 0;
 var y=0;
@@ -14,8 +17,11 @@ function startGame() {
     myGamePiece = new component(75, 75, "left.png", 50, 125, "image");
     myBackground = new component(800, 600, "background.png", 0, 0, "background");
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
-    
-    
+    myWinSound = new sound("win.wav");
+    myHitSound = new sound("hit.wav");
+    myMusic = new sound("bgMusic.mp3");
+    myMusic.loop = true;
+  myMusic.play();
     hideElement();
     
     myGameArea.start();
@@ -122,7 +128,7 @@ function component(width, height, color, x, y, type) {
         var othertop = otherobj.y;
         var otherbottom = otherobj.y + (otherobj.height);
         var crash = false;
-        if (myright == otherleft && (mytop < othertop) && (mybottom > otherbottom) ) {
+        if (myright == otherleft && (mytop < otherbottom) && (mybottom > othertop) ) {
             crash = true;
         }
         return crash;
@@ -134,8 +140,9 @@ function updateGameArea() {
     myScore.text = "SCORE: " + newScore;
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
+            myHitSound.play();
             myGameArea.stop();
-            
+            youLoseScreen();
             return;
         } 
     }
@@ -143,9 +150,9 @@ function updateGameArea() {
         if (myGamePiece.crashWithMe(myCollectables[i])) {
             newScore += 1;
             myScore.text = "SCORE: " + newScore;
-            youLoseScreen();
+            myWinSound.play();
         } 
-        if (i==2){
+        if (i==10){
             const highScore = localStorage.getItem("highestScore");
             if (newScore > highScore){
                 localStorage.removeItem("highestScore");
@@ -292,3 +299,22 @@ function hideElement() {
     }
 
 }
+
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+      this.sound.play();
+    }
+    this.stop = function(){
+      this.sound.pause();
+    }
+  }
+
+function hideCollectable(x){
+    x.removeAttribute.Image();
+  }
