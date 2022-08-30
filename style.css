@@ -1,3 +1,7 @@
+body{
+    background-image: url("mainBackground.jpg");
+}
+
 canvas{
     position: absolute;
     top: 50%;
@@ -9,31 +13,48 @@ canvas{
 
 #homePage{
     width: 800px;
-    height: 500px;
+    height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: black;
+    background-image: url("home.png");
+    background-size: 800px 600px;
 }
 
 #retryLevel{
     width: 800px;
-    height: 500px;
+    height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: black;
+    background-image: url("gameOver.png");
+    background-size: 800px 600px;
+    display: none;
 }
 
 #levelOneComplete{
     width: 800px;
-    height: 500px;
+    height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: black;
+    background-image: url("youWon.png");
+    background-size: 800px 600px;
     display: none;
+}
+
+.startBtn{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    height: 90px;
+    border: 0px;
+    border-radius: 25px;
+    background-image: url("button.png");
+    background-size: 260px 90px;
 }
